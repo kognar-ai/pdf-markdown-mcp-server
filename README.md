@@ -4,13 +4,13 @@
 
 # @kognar/pdf-markdown-mcp-server
 
-MCP server da Kognar para conversão **PDF → Markdown** e **Markdown → PDF** via STDIO.
+Kognar's MCP server for bidirectional **PDF → Markdown** and **Markdown → PDF** conversion over STDIO.
 
-Compatível com Claude Desktop, Claude Code e qualquer cliente MCP que suporte o protocolo sobre STDIO.
+Compatible with Claude Desktop, Claude Code, Kognar Platform, and any MCP client that supports the STDIO protocol.
 
 ---
 
-## Instalação rápida
+## Quick start
 
 ```bash
 npx -y @kognar/pdf-markdown-mcp-server --help
@@ -18,9 +18,31 @@ npx -y @kognar/pdf-markdown-mcp-server --help
 
 ---
 
-## Configuração no Claude Desktop
+## Kognar Platform
 
-Adicione ao seu `claude_desktop_config.json`:
+Open the **Add MCP Server** dialog and fill in the fields as shown below:
+
+| Field | Value |
+|---|---|
+| **Name** | `PDF-Markdown` |
+| **Transport** | Stdio (local) |
+| **Command** | `npx` |
+| **Arguments** | `-y @kognar/pdf-markdown-mcp-server --default-renderer pdfmake` |
+| **Working directory** | your project directory |
+| **Enabled** | ✓ |
+| **Auto-connect on startup** | ✓ |
+
+To use the puppeteer renderer (high-fidelity, requires Chromium), change the arguments to:
+
+```
+-y @kognar/pdf-markdown-mcp-server --default-renderer puppeteer
+```
+
+---
+
+## Claude Desktop
+
+Add to your `claude_desktop_config.json`:
 
 ```json
 {
@@ -33,7 +55,7 @@ Adicione ao seu `claude_desktop_config.json`:
 }
 ```
 
-Com opções personalizadas:
+With custom options:
 
 ```json
 {
@@ -53,92 +75,92 @@ Com opções personalizadas:
 
 ---
 
-## Opções de inicialização
+## Startup options
 
-| Flag | Env | Padrão | Descrição |
+| Flag | Env var | Default | Description |
 |---|---|---|---|
-| `--default-renderer` | `PDF_MD_MCP_DEFAULT_RENDERER` | `pdfmake` | Renderer padrão para Markdown → PDF (`pdfmake` ou `puppeteer`) |
-| `--tmp-dir` | `PDF_MD_MCP_TMP_DIR` | `/tmp` (OS) | Diretório para arquivos temporários |
-| `--help`, `-h` | — | — | Exibe ajuda e encerra |
+| `--default-renderer` | `PDF_MD_MCP_DEFAULT_RENDERER` | `pdfmake` | Default renderer for Markdown → PDF (`pdfmake` or `puppeteer`) |
+| `--tmp-dir` | `PDF_MD_MCP_TMP_DIR` | OS temp dir | Directory for temporary files |
+| `--help`, `-h` | — | — | Show help and exit |
 
 ---
 
-## Tools disponíveis
+## Available tools
 
 ### `pdf_to_markdown`
 
-Converte um arquivo PDF em Markdown.
+Converts a PDF file to Markdown.
 
-**Argumentos:**
+**Arguments:**
 
-| Argumento | Tipo | Obrigatório | Descrição |
+| Argument | Type | Required | Description |
 |---|---|---|---|
-| `source` | string | sim¹ | Caminho local, URL http(s), URI `file://`, ou `data:...;base64,...` |
-| `source_base64` | string | sim¹ | Conteúdo do PDF codificado em base64 puro |
-| `output_path` | string | sim | Caminho do arquivo `.md` de saída |
-| `overwrite` | boolean | não | Sobrescrever arquivo existente (padrão: `false`) |
+| `source` | string | yes¹ | Local file path, http(s) URL, `file://` URI, or `data:...;base64,...` data URI |
+| `source_base64` | string | yes¹ | Raw base64-encoded PDF content |
+| `output_path` | string | yes | Output `.md` file path |
+| `overwrite` | boolean | no | Overwrite existing file (default: `false`) |
 
-¹ Forneça `source` **ou** `source_base64` (nunca os dois).
+¹ Provide `source` **or** `source_base64` — not both.
 
-**Retorno:**
+**Response:**
 
 ```json
 { "output_path": "/absolute/path/to/file.md", "bytes_written": 1234 }
 ```
 
-**Exemplos:**
+**Examples:**
 
 ```
-# Arquivo local
+# Local file
 pdf_to_markdown(source="/Users/me/doc.pdf", output_path="./doc.md")
 
-# URL pública
+# Public URL
 pdf_to_markdown(source="https://example.com/paper.pdf", output_path="./paper.md")
 
-# Base64
+# Raw base64
 pdf_to_markdown(source_base64="JVBERi0x...", output_path="./out.md")
 ```
 
-> **Limitação:** PDFs baseados em imagens (scaneados) não possuem camada de texto e serão convertidos com conteúdo vazio ou incompleto. Para OCR, utilize um serviço externo antes da conversão.
+> **Limitation:** Image-based (scanned) PDFs have no text layer and will produce empty or incomplete output. For OCR, pre-process the PDF with an external service before converting.
 
 ---
 
 ### `markdown_to_pdf`
 
-Converte Markdown em um arquivo PDF.
+Converts Markdown to a PDF file.
 
-**Argumentos:**
+**Arguments:**
 
-| Argumento | Tipo | Obrigatório | Descrição |
+| Argument | Type | Required | Description |
 |---|---|---|---|
-| `source` | string | sim¹ | Caminho local, URL http(s), URI `file://`, ou `data:...;base64,...` |
-| `source_base64` | string | sim¹ | Conteúdo Markdown codificado em base64 puro |
-| `content` | string | sim¹ | Conteúdo Markdown como string direta |
-| `output_path` | string | sim | Caminho do arquivo `.pdf` de saída |
-| `overwrite` | boolean | não | Sobrescrever arquivo existente (padrão: `false`) |
-| `renderer` | string | não | `pdfmake` (padrão) ou `puppeteer` |
-| `paper_format` | string | não | `A4` (padrão), `Letter` ou `Legal` |
-| `margin_mm` | number | não | Margem em mm (padrão: `20`) |
-| `css` | string | não | Caminho para arquivo CSS ou CSS inline (somente `puppeteer`) |
+| `source` | string | yes¹ | Local file path, http(s) URL, `file://` URI, or `data:...;base64,...` data URI |
+| `source_base64` | string | yes¹ | Raw base64-encoded Markdown content |
+| `content` | string | yes¹ | Inline Markdown string |
+| `output_path` | string | yes | Output `.pdf` file path |
+| `overwrite` | boolean | no | Overwrite existing file (default: `false`) |
+| `renderer` | string | no | `pdfmake` (default) or `puppeteer` |
+| `paper_format` | string | no | `A4` (default), `Letter`, or `Legal` |
+| `margin_mm` | number | no | Page margin in mm (default: `20`) |
+| `css` | string | no | CSS file path or inline CSS string (puppeteer renderer only) |
 
-¹ Forneça apenas um: `content`, `source` ou `source_base64`.
+¹ Provide exactly one of `content`, `source`, or `source_base64`.
 
-**Retorno:**
+**Response:**
 
 ```json
 { "output_path": "/absolute/path/to/file.pdf", "bytes_written": 45678, "renderer": "pdfmake" }
 ```
 
-**Exemplos:**
+**Examples:**
 
 ```
-# Conteúdo inline com pdfmake
-markdown_to_pdf(content="# Olá\n\n- Item 1\n- Item 2", output_path="./out.pdf")
+# Inline content with pdfmake
+markdown_to_pdf(content="# Hello\n\n- Item 1\n- Item 2", output_path="./out.pdf")
 
-# Arquivo local com puppeteer (alta fidelidade)
+# Local file with puppeteer (high-fidelity)
 markdown_to_pdf(source="./README.md", output_path="./README.pdf", renderer="puppeteer")
 
-# Com CSS customizado
+# With custom CSS
 markdown_to_pdf(content="# Doc", output_path="./styled.pdf", renderer="puppeteer", css="./style.css")
 ```
 
@@ -146,44 +168,44 @@ markdown_to_pdf(content="# Doc", output_path="./styled.pdf", renderer="puppeteer
 
 ## Renderers: pdfmake vs puppeteer
 
-| Característica | pdfmake | puppeteer |
+| Feature | pdfmake | puppeteer |
 |---|---|---|
-| Peso | Leve (~5MB) | Pesado (~200MB Chromium) |
-| Fidelidade | Boa (sem CSS) | Alta (HTML/CSS completo) |
-| Tabelas | Suportadas | Suportadas |
-| Imagens | Exibidas como `[image: alt]` | Renderizadas |
-| Syntax highlight | Não | Sim (via CSS) |
-| Chromium necessário | Não | Sim |
-| Velocidade | Rápido | Mais lento (cold start) |
+| Size | Lightweight (~5 MB) | Heavy (~200 MB Chromium) |
+| Fidelity | Good (no CSS) | High (full HTML/CSS) |
+| Tables | Supported | Supported |
+| Images | Rendered as `[image: alt]` | Fully rendered |
+| Syntax highlighting | No | Yes (via CSS) |
+| Chromium required | No | Yes |
+| Speed | Fast | Slower (cold start) |
 
-### Ativar o renderer puppeteer
+### Enabling the puppeteer renderer
 
-O `md-to-pdf` é uma dependência opcional. Para ativá-lo:
+`md-to-pdf` is an optional dependency. To enable it:
 
 ```bash
-# Na instalação local do servidor
+# Install locally
 npm install md-to-pdf
 
-# Ou ao instalar sem omitir opcionais
+# Or reinstall without omitting optionals
 npm install --include=optional
 ```
 
-Para evitar o download do Chromium (se já tiver Chrome instalado):
+To skip the Chromium download if you already have Chrome installed:
 
 ```bash
-PUPPETEER_EXECUTABLE_PATH=/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
   node dist/index.js --default-renderer puppeteer
 ```
 
 ---
 
-## Desenvolvimento
+## Development
 
 ```bash
-# Instalar dependências
+# Install dependencies
 npm install
 
-# Rodar em modo dev (sem build)
+# Run in dev mode (no build required)
 npm run dev
 
 # Build
@@ -192,12 +214,12 @@ npm run build
 # Type check
 npm run typecheck
 
-# Testar com MCP Inspector
+# Test with MCP Inspector
 npx @modelcontextprotocol/inspector node dist/index.js
 ```
 
 ---
 
-## Licença
+## License
 
 [AGPL-3.0-only](./LICENSE) © Kognar
