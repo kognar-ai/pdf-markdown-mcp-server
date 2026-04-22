@@ -1,0 +1,43 @@
+{
+  "name": "@kognar-tools/pdf-markdown-mcp-server",
+  "version": "0.1.0",
+  "description": "MCP server da Kognar para conversão PDF ↔ Markdown via STDIO.",
+  "type": "module",
+  "bin": {
+    "pdf-markdown-mcp-server": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && chmod +x dist/index.js",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "typecheck": "tsc --noEmit",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@opendocsg/pdf2md": "^0.2.6",
+    "markdown-it": "^14.1.0",
+    "pdfmake": "^0.2.10",
+    "zod": "^3.23.8"
+  },
+  "optionalDependencies": {
+    "md-to-pdf": "^5.2.4"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.1.2",
+    "@types/node": "^22.10.0",
+    "@types/pdfmake": "^0.2.9",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  },
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": ">=18"
+  }
+}
