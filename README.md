@@ -2,7 +2,7 @@
   <img src="https://kognar.com/assets/img/logo_kognar_white.svg" width="200" alt="Kognar"/>
 </p>
 
-# @kognar-tools/pdf-markdown-mcp-server
+# @kognar/pdf-markdown-mcp-server
 
 MCP server da Kognar para conversão **PDF → Markdown** e **Markdown → PDF** via STDIO.
 
@@ -13,7 +13,7 @@ Compatível com Claude Desktop, Claude Code e qualquer cliente MCP que suporte o
 ## Instalação rápida
 
 ```bash
-npx -y @kognar-tools/pdf-markdown-mcp-server --help
+npx -y @kognar/pdf-markdown-mcp-server --help
 ```
 
 ---
@@ -27,7 +27,7 @@ Adicione ao seu `claude_desktop_config.json`:
   "mcpServers": {
     "pdf-markdown": {
       "command": "npx",
-      "args": ["-y", "@kognar-tools/pdf-markdown-mcp-server"]
+      "args": ["-y", "@kognar/pdf-markdown-mcp-server"]
     }
   }
 }
@@ -42,7 +42,7 @@ Com opções personalizadas:
       "command": "npx",
       "args": [
         "-y",
-        "@kognar-tools/pdf-markdown-mcp-server",
+        "@kognar/pdf-markdown-mcp-server",
         "--default-renderer", "pdfmake",
         "--tmp-dir", "/tmp/pdf-md"
       ]

@@ -41,7 +41,7 @@ export function parseConfig(argv: string[]): AppConfig {
       `pdf-markdown-mcp-server
 
 Usage:
-  npx @kognar-tools/pdf-markdown-mcp-server [options]
+  npx @kognar/pdf-markdown-mcp-server [options]
 
 Options (fallback to env vars):
   --tmp-dir <dir>                  Directory for temp files (PDF_MD_MCP_TMP_DIR)

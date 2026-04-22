@@ -1,5 +1,5 @@
 {
-  "name": "@kognar-tools/pdf-markdown-mcp-server",
+  "name": "@kognar/pdf-markdown-mcp-server",
   "version": "0.1.0",
   "description": "MCP server da Kognar para conversão PDF ↔ Markdown via STDIO.",
   "type": "module",
